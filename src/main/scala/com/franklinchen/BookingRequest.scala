@@ -44,22 +44,27 @@ object BookingRequest {
     optDateString: Option[String],
     optSeats: Option[Int]
   ): ValidationNel[Error, BookingRequest] = {
-    val dateResult = for {
-      dateString <- optDateString.toRightDisjunction(Missing("date"))
-      date <- Date.parse(dateString).leftMap(DateError)
-      timelyDate <- timelyBookingDate(date, now)
-    } yield timelyDate
+    val dateResult = makeTimelyBookingDate(now, optDateString)
+    val seatsResult = makeSeats(optSeats)
 
-    val seatsResult = for {
-      num <- optSeats.toRightDisjunction(Missing("seats"))
-      validSeats <- Seats.make(num).leftMap(SeatsError)
-    } yield validSeats
-
-    (
+    val combinedBuilder =
       dateResult.validation.toValidationNel |@|
       seatsResult.validation.toValidationNel
-    )(BookingRequest(_, _))
+
+    combinedBuilder(BookingRequest(_, _))
   }
+
+  def makeTimelyBookingDate(now: Date,
+    optDateString: Option[String]): Error \/ Date = for {
+    dateString <- optDateString.toRightDisjunction(Missing("date"))
+    date <- Date.parse(dateString).leftMap(DateError)
+    timelyDate <- timelyBookingDate(date, now)
+  } yield timelyDate
+
+  def makeSeats(optSeats: Option[Int]): Error \/ Seats = for {
+    num <- optSeats.toRightDisjunction(Missing("seats"))
+    validSeats <- Seats.make(num).leftMap(SeatsError)
+  } yield validSeats
 
   def timelyBookingDate(date: Date, now: Date):
       DateBefore \/ Date = {
