@@ -16,7 +16,7 @@ object Seats {
   }
 
   def make(num: Int): BadCount \/ Seats = {
-    if (num < 0)
+    if (num <= 0)
       BadCount(num).left
     else
       Seats(num).right
