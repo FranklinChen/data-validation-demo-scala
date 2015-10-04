@@ -12,13 +12,13 @@ description := "Data validation demo in Scala"
 
 version := "1.0.0"
 
-scalaVersion := "2.11.6"
+scalaVersion := "2.11.7"
 
 libraryDependencies ++= Seq(
-  "org.scalaz" %% "scalaz-core" % "7.1.1",
-  "org.scalacheck" %% "scalacheck" % "1.12.2" % Test,
-  "org.specs2" %% "specs2-core" % "3.4" % Test,
-  "org.specs2" %% "specs2-scalacheck" % "3.4" % Test,
+  "org.scalaz" %% "scalaz-core" % "7.1.4",
+  "org.scalacheck" %% "scalacheck" % "1.12.5" % Test,
+  "org.specs2" %% "specs2-core" % "3.6.4" % "test",
+  "org.specs2" %% "specs2-scalacheck" % "3.6.4" % "test",
   "org.typelevel" %% "scalaz-specs2" % "0.4.0" % Test
 )
 
